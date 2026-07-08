@@ -10,23 +10,31 @@ export default function SelectorUI() {
     const handleChange = (event: SelectChangeEvent<string>) => {
         setCityInput(event.target.value);
     };
-                <Select
+
     return (
-        <FormControl fullWidth>
-      <InputLabel id="city-select-label">Ciudad</InputLabel>
+        <div>
+            <FormControl fullWidth>
+                <InputLabel id="city-select-label">Ciudad</InputLabel>
+                <Select
+                    labelId="city-select-label"
+                    id="city-simple-select"
+                    label="Ciudad"
                     value={cityInput}
-                    onChange={handleChange}>
-                    <MenuItem disabled value=""><em>Seleccione una ciudad</em></MenuItem>
-         id="city-simple-select"
-         label="Ciudad"
-         onChange={handleChange}>
-         <MenuItem disabled><em>Seleccione una ciudad</em></MenuItem>
-         <MenuItem value={"guayaquil"}>Guayaquil</MenuItem>
-         <MenuItem value={"quito"}>Quito</MenuItem>
+                    onChange={handleChange}
+                >
+                    <MenuItem value=""><em>Seleccione una ciudad</em></MenuItem>
+                    <MenuItem value={"guayaquil"}>Guayaquil</MenuItem>
+                    <MenuItem value={"quito"}>Quito</MenuItem>
+                    <MenuItem value={"manta"}>Manta</MenuItem>
+                    <MenuItem value={"cuenca"}>Cuenca</MenuItem>
+                </Select>
+            </FormControl>
 
             {cityInput && (
                 <p>
                     Información del clima en <span style={{ textTransform: 'capitalize', fontWeight: 'bold' }}>{cityInput}</span>
                 </p>
             )}
+        </div>
+    );
 }
