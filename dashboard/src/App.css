@@ -61,4 +61,8 @@ body {
   .card--table {
     grid-column: span 12;
   }
+
+  .indicators-grid {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
 }
