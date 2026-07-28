@@ -11,9 +11,15 @@ import useFetchData from './hooks/useFetchData'
 
 function App() {
   const [selectedOption, setSelectedOption] = useState<string | null>(null)
-  const dataFetcherOutput = useFetchData(selectedOption)
-  const current = dataFetcherOutput?.current
-  const currentUnits = dataFetcherOutput?.current_units
+  const { data, loading, error } = useFetchData(selectedOption)
+  const current = data?.current
+  const currentUnits = data?.current_units
+
+  const getIndicatorDescription = (value: number | string | undefined, unit: string | undefined) => {
+    if (loading) return 'Cargando...'
+    if (error) return `Error: ${error}`
+    return `${value ?? 'N/A'} ${unit ?? ''}`.trim()
+  }
 
   return (
     <div className="dashboard-shell">
@@ -29,44 +35,28 @@ function App() {
         <div className="card card--selector"><SelectorUI onOptionSelect={setSelectedOption} /></div>
         <Grid container size={{ xs: 12, md: 9 }} spacing={2} className="card card--indicators">
           <Grid size={{ xs: 12, md: 3 }}>
-            {dataFetcherOutput ? (
-              <IndicatorUI
-                title="Temperatura (2m)"
-                description={`${current?.temperature_2m ?? 'N/A'} ${currentUnits?.temperature_2m ?? ''}`.trim()}
-              />
-            ) : (
-              <IndicatorUI title="Temperatura (2m)" description="Cargando..." />
-            )}
+            <IndicatorUI
+              title="Temperatura (2m)"
+              description={getIndicatorDescription(current?.temperature_2m, currentUnits?.temperature_2m)}
+            />
           </Grid>
           <Grid size={{ xs: 12, md: 3 }}>
-            {dataFetcherOutput ? (
-              <IndicatorUI
-                title="Temperatura aparente"
-                description={`${current?.apparent_temperature ?? 'N/A'} ${currentUnits?.apparent_temperature ?? ''}`.trim()}
-              />
-            ) : (
-              <IndicatorUI title="Temperatura aparente" description="Cargando..." />
-            )}
+            <IndicatorUI
+              title="Temperatura aparente"
+              description={getIndicatorDescription(current?.apparent_temperature, currentUnits?.apparent_temperature)}
+            />
           </Grid>
           <Grid size={{ xs: 12, md: 3 }}>
-            {dataFetcherOutput ? (
-              <IndicatorUI
-                title="Velocidad del viento"
-                description={`${current?.wind_speed_10m ?? 'N/A'} ${currentUnits?.wind_speed_10m ?? ''}`.trim()}
-              />
-            ) : (
-              <IndicatorUI title="Velocidad del viento" description="Cargando..." />
-            )}
+            <IndicatorUI
+              title="Velocidad del viento"
+              description={getIndicatorDescription(current?.wind_speed_10m, currentUnits?.wind_speed_10m)}
+            />
           </Grid>
           <Grid size={{ xs: 12, md: 3 }}>
-            {dataFetcherOutput ? (
-              <IndicatorUI
-                title="Humedad relativa"
-                description={`${current?.relative_humidity_2m ?? 'N/A'} ${currentUnits?.relative_humidity_2m ?? ''}`.trim()}
-              />
-            ) : (
-              <IndicatorUI title="Humedad relativa" description="Cargando..." />
-            )}
+            <IndicatorUI
+              title="Humedad relativa"
+              description={getIndicatorDescription(current?.relative_humidity_2m, currentUnits?.relative_humidity_2m)}
+            />
           </Grid>
         </Grid>
         <Grid size={{ xs: 6, md: 6 }} sx={{ display: { xs: 'none', md: 'block' } }} className="card card--chart">
