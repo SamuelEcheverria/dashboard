@@ -1,121 +1,73 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
 import './App.css'
+import Grid from '@mui/material/Grid'
+import AlertUI from './components/AlertUI'
+import HeaderUI from './components/HeaderUI'
+import SelectorUI from './components/SelectorUI'
+import IndicatorUI from './components/IndicatorUI'
+import ChartUI from './components/ChartUI'
+import TableUI from './components/TableUI'
+import useFetchData from './hooks/useFetchData'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [selectedOption, setSelectedOption] = useState<string | null>(null)
+  const { data, loading, error } = useFetchData(selectedOption)
+  const current = data?.current
+  const currentUnits = data?.current_units
+
+  const getIndicatorDescription = (value: number | string | undefined, unit: string | undefined) => {
+    if (loading) return 'Cargando...'
+    if (error) return `Error: ${error}`
+    return `${value ?? 'N/A'} ${unit ?? ''}`.trim()
+  }
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="dashboard-shell">
+      <h1 className="dashboard-title">Bienvenido</h1>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+      <div className="dashboard-grid">
+        <div className="card card--full">
+          <HeaderUI />
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
+        <div className="card card--full" style={{ justifyContent: 'flex-end', alignItems: 'center' }}>
+          <AlertUI description="No se preveen lluvias" />
         </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+        <div className="card card--selector"><SelectorUI onOptionSelect={setSelectedOption} /></div>
+        <Grid container size={{ xs: 12, md: 9 }} spacing={2} className="card card--indicators">
+          <Grid size={{ xs: 12, md: 3 }}>
+            <IndicatorUI
+              title="Temperatura (2m)"
+              description={getIndicatorDescription(current?.temperature_2m, currentUnits?.temperature_2m)}
+            />
+          </Grid>
+          <Grid size={{ xs: 12, md: 3 }}>
+            <IndicatorUI
+              title="Temperatura aparente"
+              description={getIndicatorDescription(current?.apparent_temperature, currentUnits?.apparent_temperature)}
+            />
+          </Grid>
+          <Grid size={{ xs: 12, md: 3 }}>
+            <IndicatorUI
+              title="Velocidad del viento"
+              description={getIndicatorDescription(current?.wind_speed_10m, currentUnits?.wind_speed_10m)}
+            />
+          </Grid>
+          <Grid size={{ xs: 12, md: 3 }}>
+            <IndicatorUI
+              title="Humedad relativa"
+              description={getIndicatorDescription(current?.relative_humidity_2m, currentUnits?.relative_humidity_2m)}
+            />
+          </Grid>
+        </Grid>
+        <Grid size={{ xs: 6, md: 6 }} sx={{ display: { xs: 'none', md: 'block' } }} className="card card--chart">
+          <ChartUI selectedOption={selectedOption} />
+        </Grid>
+        <Grid size={{ xs: 6, md: 6 }} sx={{ display: { xs: 'none', md: 'block' } }} className="card card--table">
+          <TableUI selectedOption={selectedOption} />
+        </Grid>
+        <div className="card card--full">Elemento: Información adicional</div>
+      </div>
+    </div>
   )
 }
 

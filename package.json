@@ -2,9 +2,14 @@
   "name": "dashboard",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dashboard/index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "npm --prefix dashboard run dev -- --host 0.0.0.0",
+    "build": "npm --prefix dashboard run build",
+    "lint": "npm --prefix dashboard run lint",
+    "preview": "npm --prefix dashboard run preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dashboard/dist"
   },
   "repository": {
     "type": "git",
@@ -17,5 +22,16 @@
   "bugs": {
     "url": "https://github.com/SamuelEcheverria/dashboard/issues"
   },
-  "homepage": "https://github.com/SamuelEcheverria/dashboard#readme"
+  "homepage": "https://SamuelEcheverria.github.io/dashboard",
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/material": "^6.4.2",
+    "@mui/system": "^6.4.2",
+    "@mui/x-charts": "^7.0.0",
+    "@mui/x-data-grid": "^7.0.0"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.3.0"
+  }
 }
