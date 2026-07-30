@@ -65,7 +65,7 @@ function App() {
         <Grid size={{ xs: 6, md: 6 }} sx={{ display: { xs: 'none', md: 'block' } }} className="card card--table">
           <TableUI selectedOption={selectedOption} />
         </Grid>
-        <div className="card card--full">Elemento: Información adicional</div>
+        <div className="card card--full">Componente: Información adicional</div>
       </div>
     </div>
   )
